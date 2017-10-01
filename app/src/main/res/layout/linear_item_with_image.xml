@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="132dp">
+    <ImageView android:layout_width="100dp"
+               android:layout_height="100dp"
+               android:src="@mipmap/ic_launcher"
+               android:layout_marginBottom="16dp"
+               android:layout_marginStart="16dp"
+               android:layout_marginTop="16dp"
+    />
+
+    <FrameLayout android:layout_width="wrap_content"
+                 android:layout_height="match_parent"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:maxLines="2"
+                  android:textSize="14sp"
+                  android:text="Hello There! How are You. uigisugigsug suhiuhsiuh. sosih"
+
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="John Smith Has se"
+                  android:layout_gravity="end"
+                  android:textSize="14sp"
+        />
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
+            <ImageView
+                    android:id="@+id/home_feed_card_country_iv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:paddingBottom="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingTop="6dp"
+                    android:src="@android:drawable/checkbox_on_background"/>
+            <ImageView
+                    android:id="@+id/home_feed_card_item_icon_iv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:paddingBottom="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="6dp"
+                    android:background="@android:color/holo_green_dark"
+                    android:src="@android:drawable/sym_action_chat"/>
+
+            <ImageView
+                    android:id="@+id/home_feed_card_chat_iv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="6dp"
+                    android:background="@android:color/black"
+                    android:src="@android:drawable/ic_menu_camera"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+
+</LinearLayout>

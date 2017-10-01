@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="140dp">
+    <ImageView android:layout_width="100dp"
+               android:layout_height="100dp"
+               android:src="@mipmap/ic_launcher"
+               android:id="@+id/big_image_view"
+    />
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Hello There, How are you doing today.Whats going on!"
+              android:layout_alignTop="@id/big_image_view"
+              android:layout_toEndOf="@id/big_image_view"
+              android:id="@+id/top_text"
+    />
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="John Smith - 2 Hours Ago"
+              android:layout_toEndOf="@id/big_image_view"
+              android:layout_below="@id/top_text"
+              android:id="@+id/mid_text"
+    />
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sub"
+            android:layout_toEndOf="@id/mid_text"
+            android:layout_alignTop="@id/mid_text"
+    />
+    <ImageView
+            android:id="@+id/home_feed_card_country_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp"
+            android:layout_toEndOf="@id/big_image_view"
+            android:layout_alignBottom="@id/big_image_view"
+            android:src="@android:drawable/checkbox_on_background"/>
+    <ImageView
+            android:id="@+id/home_feed_card_item_icon_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp"
+            android:layout_toEndOf="@id/home_feed_card_country_iv"
+            android:layout_alignBottom="@id/big_image_view"
+            android:background="@android:color/holo_green_dark"
+            android:src="@android:drawable/sym_action_chat"/>
+
+</RelativeLayout>
