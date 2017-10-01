@@ -21,6 +21,7 @@ import retrofit2.http.Query;
 public class MainActivity extends AppCompatActivity {
     private static final String BING_API_URL= "https://api.cognitive.microsoft.com/";
     private BingImageService service;
+    SearchResultsViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         // Staggered Grid Layout
         // Adapter with the viewholder pattern
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.search_list);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, 1));
         // should show the views
-        RecyclerView.Adapter adapter = new SearchResultsViewAdapter();
+        ImageSearchResult searchResult = new ImageSearchResult();
+        adapter = new SearchResultsViewAdapter(searchResult);
         recyclerView.setAdapter(adapter);
 
         // retrofit stuff to query the data
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(Call<ImageSearchResult> call, Response<ImageSearchResult> response) {
                         ImageSearchResult imageSearchResult = response.body();
                         Log.i("ImageSearchResult", imageSearchResult.toString());
+                        adapter.update(imageSearchResult);
                     }
 
                     @Override

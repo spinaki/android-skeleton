@@ -1,5 +1,6 @@
 package xyz.pinaki.androidbasics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,13 @@ import java.util.List;
 // the model class
 public class ImageSearchResult {
     public List<Image> value;
+    public ImageSearchResult() {
+        value = new ArrayList<>();
+    }
+
+    public void update() {
+
+    }
 
     public static final class Image {
         String thumbnailUrl;
@@ -22,5 +30,8 @@ public class ImageSearchResult {
     @Override
     public String toString() {
         return value.toString();
+    }
+    public int size() {
+        return value != null ? value.size() : 0;
     }
 }
