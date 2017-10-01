@@ -27,7 +27,7 @@ private interface BingImageService {
 ````
 Instantiate the class as below:
 ````
-retrofit.create(BingImageService.class);
+service = retrofit.create(BingImageService.class);
 ````
 
 ##### Execute A Call

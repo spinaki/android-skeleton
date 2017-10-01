@@ -5,11 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Query;
 
+public class MainActivity extends AppCompatActivity {
+    private static final String BING_API_URL= "https://api.cognitive.microsoft.com/";
+    private BingImageService service;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,12 +28,18 @@ public class MainActivity extends AppCompatActivity {
         // RecyclerView for images
         // Staggered Grid Layout
         // Adapter with the viewholder pattern
-        // retrofit stuff to query the data
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.search_list);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
         // should show the views
         RecyclerView.Adapter adapter = new SearchResultsViewAdapter();
         recyclerView.setAdapter(adapter);
+
+        // retrofit stuff to query the data
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BING_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(BingImageService.class);
 
         // A separate activity for showing the bitmaps
         // with a viewpager to show the images.
@@ -42,7 +59,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // start a query by posting to the APIThread
-                return false;
+                int offset = 0;
+                Call<ImageSearchResult> call = service.search(query, 100, offset, "en-us", "Moderate");
+                call.enqueue(new Callback<ImageSearchResult>() {
+                    @Override
+                    public void onResponse(Call<ImageSearchResult> call, Response<ImageSearchResult> response) {
+                        ImageSearchResult imageSearchResult = response.body();
+                        Log.i("ImageSearchResult", imageSearchResult.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ImageSearchResult> call, Throwable t) {
+                        Log.i("ImageSearchResult Fail", t.toString());
+                    }
+                });
+                return true;
             }
 
             @Override
@@ -52,5 +83,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    private interface BingImageService {
+        @Headers({"Ocp-Apim-Subscription-Key: 5db7a77b19d943f2a4cce83ce6b59502"})
+        @GET("/bing/v5.0/images/search")
+        Call<ImageSearchResult> search(@Query("q") String query, @Query("count") Integer count,
+                                       @Query("offset") Integer offset, @Query("mkt") String market,
+                                       @Query("safeSearch") String safeSearch);
     }
 }
