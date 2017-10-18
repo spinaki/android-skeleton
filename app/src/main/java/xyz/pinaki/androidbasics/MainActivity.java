@@ -1,5 +1,6 @@
 package xyz.pinaki.androidbasics;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,11 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ImageDetailsActivity.ThumbnailClickListener {
     private static final String BING_API_URL= "https://api.cognitive.microsoft.com/";
     private BingImageService service;
     SearchResultsViewAdapter adapter;
+    ImageSearchResult imageSearchResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
         // should show the views
         ImageSearchResult searchResult = new ImageSearchResult();
-        adapter = new SearchResultsViewAdapter(searchResult);
+        adapter = new SearchResultsViewAdapter(searchResult, this);
         recyclerView.setAdapter(adapter);
 
         // retrofit stuff to query the data
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         service = retrofit.create(BingImageService.class);
 
-        // A separate activity for showing the bitmaps
+        // A separate fragment for showing the bitmaps
         // with a viewpager to show the images.
         // fragmentstatepager adapter to provide the data
         // this activity may be started by an Intent
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ImageSearchResult>() {
                     @Override
                     public void onResponse(Call<ImageSearchResult> call, Response<ImageSearchResult> response) {
-                        ImageSearchResult imageSearchResult = response.body();
+                        imageSearchResult = response.body();
                         Log.i("ImageSearchResult", imageSearchResult.toString());
                         adapter.update(imageSearchResult);
                     }
@@ -86,6 +88,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public void onThumbnailClick(int position) {
+        final Intent intent = new Intent(this, ImageDetailsActivity.class);
+        intent.putExtra(ImageDetailsActivity.IMAGE_POSITION, position);
+        String[] urls = new String[imageSearchResult.size()];
+        int i = 0;
+        for(ImageSearchResult.Image image : imageSearchResult.value) {
+            urls[i++] = image.contentUrl;
+        }
+        intent.putExtra(ImageDetailsActivity.IMAGE_URLS, urls);
+        startActivity(intent);
     }
 
     private interface BingImageService {

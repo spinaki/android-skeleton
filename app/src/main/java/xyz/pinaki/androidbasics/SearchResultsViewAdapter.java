@@ -1,6 +1,7 @@
 package xyz.pinaki.androidbasics;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,10 @@ import com.squareup.picasso.Picasso;
 
 public class SearchResultsViewAdapter extends RecyclerView.Adapter<SearchResultsViewAdapter.ImageViewHolder> {
     ImageSearchResult imageSearchResult;
-    public SearchResultsViewAdapter(ImageSearchResult searchResult) {
+    ImageDetailsActivity.ThumbnailClickListener thumbnailClickListener;
+    public SearchResultsViewAdapter(ImageSearchResult searchResult, ImageDetailsActivity.ThumbnailClickListener t) {
         imageSearchResult = searchResult;
+        thumbnailClickListener = t;
     }
     public void update(ImageSearchResult searchResult) {
         int oldSize = imageSearchResult.size();
@@ -24,9 +27,8 @@ public class SearchResultsViewAdapter extends RecyclerView.Adapter<SearchResults
     }
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View thumbNailView = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item_thumbnail,
-                null);
-        return new ImageViewHolder(thumbNailView);
+        View thumbNailView = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item_thumbnail, null);
+        return new ImageViewHolder(thumbNailView, thumbnailClickListener);
     }
 
     @Override
@@ -40,12 +42,26 @@ public class SearchResultsViewAdapter extends RecyclerView.Adapter<SearchResults
         return imageSearchResult.size();
     }
 
-    static class ImageViewHolder extends RecyclerView.ViewHolder {
+    static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         ImageView imageView;
-        public ImageViewHolder(View itemView) {
+        ImageDetailsActivity.ThumbnailClickListener thumbnailClickListener;
+        public ImageViewHolder(View itemView, ImageDetailsActivity.ThumbnailClickListener t) {
             super(itemView);
+            thumbnailClickListener = t;
             imageView = (ImageView)itemView.findViewById(R.id.thumb_image);
+            itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+            Log.i("PINAKI-CLICK", "thumbnailClickListener");
+            thumbnailClickListener.onThumbnailClick(getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Log.i("PINAKI-CLICK", "thumbnail long ClickListener");
+            return true;
         }
     }
 }
