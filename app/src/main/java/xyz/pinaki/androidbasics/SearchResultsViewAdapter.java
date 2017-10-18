@@ -21,7 +21,6 @@ public class SearchResultsViewAdapter extends RecyclerView.Adapter<SearchResults
         int oldSize = imageSearchResult.size();
         this.imageSearchResult.value.addAll(searchResult.value);
         notifyItemRangeInserted(oldSize, searchResult.value.size());
-
     }
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

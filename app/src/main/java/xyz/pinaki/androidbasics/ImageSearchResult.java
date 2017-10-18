@@ -13,10 +13,6 @@ public class ImageSearchResult {
         value = new ArrayList<>();
     }
 
-    public void update() {
-
-    }
-
     public static final class Image {
         String thumbnailUrl;
         String contentUrl;

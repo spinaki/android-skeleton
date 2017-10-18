@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         // Staggered Grid Layout
         // Adapter with the viewholder pattern
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.search_list);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, 1));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
         // should show the views
         ImageSearchResult searchResult = new ImageSearchResult();
         adapter = new SearchResultsViewAdapter(searchResult);
