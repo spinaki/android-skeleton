@@ -19,8 +19,6 @@ public class ImageDetailsActivity extends AppCompatActivity {
     ViewPager pager;
     FragmentStatePagerAdapter adapter;
 
-//    @Nullable
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

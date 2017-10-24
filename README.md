@@ -95,6 +95,26 @@ public void downloadImage(String url, final String fileName) throws Exception {
     }
 ````
 #### AsyncTask
+AysncTask has a bunch of generic types. The three types used by an asynchronous task are the following:
+* Params, the type of the parameters sent to the task upon execution.
+* Progress, the type of the progress units published during the background computation.
+* Result, the type of the result of the background computation.
+
+Using the above the AsyncTask is defined as:
+````
+class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
+    protected Long doInBackground(URL... urls) {
+    // ...
+    }
+    protected void onProgressUpdate(Integer... progress) {
+    // ...
+    }
+    protected void onPostExecute(Long result) {
+    // ...
+    }
+}
+````
+
 ````
 private class QueryAPITask extends AsyncTask<String, Integer, ImageSearchResult> {
         protected ImageSearchResult doInBackground(String... queryParams) {
@@ -112,6 +132,10 @@ private class QueryAPITask extends AsyncTask<String, Integer, ImageSearchResult>
             recyclerViewAdapter.notifyItemRangeInserted(c, result.size());
         }
     }
+````
+It can be executed as follows:
+````
+new QueryAPITask().execute(str1, str2, str3); // the strings are the params for doInBackground as specified in the first template type.
 ````
 #### ExecutorService
 Define a bunch of threads and execute them.
@@ -133,6 +157,24 @@ for (int i = 0; i < NUM_JOBS; i++) {
         public void run() {
             // Do some long running operation in background
             // on a worker thread in the thread pool!
+
+            // then update the UI thread. 2 ways
+            <!-- 1. invoke runOnUiThread from activity -->
+            runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                // ...
+                }
+            });
+
+            // or call the handler
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                @Override
+                public void run() {
+                    // ...
+                }
+            });
         }
     });
 }
