@@ -70,6 +70,30 @@ Call<User> createUser(@Body User user);
 ````
 Invoke the API as such:
 
+#### OKHttp
+##### Download a File
+````
+public void downloadImage(String url, final String fileName) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                try {
+                    File downloadedFile = new File(getCacheDir(), fileName);
+                    BufferedSink sink = Okio.buffer(Okio.sink(downloadedFile));
+                    sink.writeAll(response.body().source());
+                    sink.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+````
 #### AsyncTask
 ````
 private class QueryAPITask extends AsyncTask<String, Integer, ImageSearchResult> {
@@ -100,14 +124,61 @@ ThreadPoolExecutor executor = new ThreadPoolExecutor(NUMBER_OF_CORES*2,
     NUMBER_OF_CORES * 2, 60L, TimeUnit.SECONDS,
     new LinkedBlockingQueue<Runnable>()
 );
-executor.execute(new Runnable() {
-    public void run() {
-        // Do some long running operation in background
-        // on a worker thread in the thread pool!
-    }
-});
+
+// or use
+ExecutorService executor = Executors.newFixedThreadPool(10);
+
+for (int i = 0; i < NUM_JOBS; i++) {
+    executor.execute(new Runnable() {
+        public void run() {
+            // Do some long running operation in background
+            // on a worker thread in the thread pool!
+        }
+    });
+}
+
 executor.shutdown();
 ````
+Executors using Futures:
+````
+ExecutorService executorService = Executors.newFixedThreadPool(10);
+String[] urls = imageUrls();
+for (final String url : urls) {
+            final Future future = executorService.submit(new Callable<Bitmap>() {
+                @Override
+                public Bitmap call() throws Exception {
+                    Request request = new Request.Builder().url(url).build();
+                    OkHttpClient client = new OkHttpClient();
+                    Response response = client.newCall(request).execute();
+                    InputStream inputStream = response.body().byteStream();
+                    BitmapFactory.Options o = new BitmapFactory.Options();
+                    o.inSampleSize = 3;
+                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, o);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageView imageView = new ImageView(context);
+                            imageView.setImageBitmap(bitmap);
+                            gridLayout.addView(imageView);
+                        }
+                    });
+                    return bitmap;
+
+                }
+            });
+            // if you dont want to do runOnUiThread -- you can do a future call
+            try {
+                Bitmap b = (Bitmap)future.get();
+                ImageView imageView = new ImageView(this);
+                imageView.setImageBitmap(b);
+                gridLayout.addView(imageView);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+````
+
 #### HandlerThread
 
 ### Views
